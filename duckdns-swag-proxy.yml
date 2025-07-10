@@ -1,0 +1,38 @@
+services:
+
+  duckdns:
+    image: lscr.io/linuxserver/duckdns:latest
+    container_name: duckdns
+    network_mode: host
+    environment:
+      - PUID=${PUID}
+      - PGID={${GUID}
+      - TZ=${TZ}
+      - SUBDOMAINS=${SUBDOMAIN}
+      - TOKEN=${TOKEN}
+      - UPDATE_IP=ipv4
+      - LOG_FILE=false
+    volumes:
+      - ${CONTAINERPATH}/duckdns/config:/config
+    restart: unless-stopped
+
+  swag:
+    image: lscr.io/linuxserver/swag
+    container_name: swag
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=${PUID}
+      - PGID={${GUID}
+      - TZ=${TZ}
+      - URL=${SUBDOMAIN}.duckdns.org
+      - SUBDOMAINS=wildcard
+      - VALIDATION=dns
+      - DNSPLUGIN=duckdns
+    volumes:
+      - ${CONTAINERPATH}/swag/config:/config
+    ports:
+      - 443:443
+      - 80:80
+    restart: unless-stopped
