@@ -1,0 +1,25 @@
+services:
+  swag-external:
+    image: lscr.io/linuxserver/swag
+    container_name: swag-external
+    #network_mode: host
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=${PUID}
+      - PGID={${GUID}
+      - TZ=${TZ}
+      - URL=${SUBDOMAIN}.duckdns.org
+      - SUBDOMAINS=wildcard
+      - VALIDATION=dns
+      - DNSPLUGIN=duckdns
+      - DOCKER_MODS=linuxserver/mods:swag-maxmind
+      - MAXMINDDB_USER_ID=${MAXMINDDB_USER_ID}
+      - MAXMINDDB_LICENSE_KEY=${MAXMINDDB_LICENSE_KEY}
+    volumes:
+      - ${CONTAINERPATH}/swag-external/config:/config
+    ports:
+      - 8180:443
+      #- 443:443
+      #- 80:80
+    restart: unless-stopped
